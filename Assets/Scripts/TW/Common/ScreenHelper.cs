@@ -38,11 +38,11 @@ namespace TW.Common
         /// <summary>
         /// アスペクト比.
         /// </summary>
-        public static Vector2 AspectRate => MathUtility.GetAspectRate(ScreenWidth, ScreenHeight);
+        public static Vector2 AspectRate => MathHelper.GetAspectRate(ScreenWidth, ScreenHeight);
 
         /// <summary>
         /// 小さい方を1としたアスペクト比.
         /// </summary>
-        public static Vector2 NormalizedAspectRate => MathUtility.GetNormalizedAspectRate(ScreenWidth, ScreenHeight);
+        public static Vector2 NormalizedAspectRate => MathHelper.GetNormalizedAspectRate(ScreenWidth, ScreenHeight);
     }
 }
