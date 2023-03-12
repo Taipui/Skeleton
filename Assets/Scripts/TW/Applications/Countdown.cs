@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
 using System.Collections;
@@ -36,7 +36,7 @@ namespace TW.Applications
         /// <summary>
         /// WaitForSecondsのキャッシュ.
         /// </summary>
-        private WaitForSeconds Wfs = new(1.0f);
+        private readonly WaitForSeconds Wfs = new(1.0f);
 
         //================================================================================
         // Methods.
@@ -58,6 +58,9 @@ namespace TW.Applications
         /// <summary>
         /// カウントダウンするコルーチン.
         /// </summary>
+        /// <remarks>
+        /// Spritesに設定されている画像-1秒のカウントダウン後、Spritesに設定されている最後の画像を表示した状態で終わる.
+        /// </remarks>
         /// <param name="cb">カウントダウンが終わると呼ばれる.</param>
         public IEnumerator Do(System.Action cb = null)
         {
@@ -71,9 +74,6 @@ namespace TW.Applications
 
             Image.overrideSprite = Sprites[^1];
             Image.SetNativeSize();
-            yield return Wfs;
-
-            Reset();
 
             cb?.Invoke();
         }
