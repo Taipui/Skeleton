@@ -65,10 +65,12 @@ namespace TW.Applications
             for (var i = 0; i < Sprites.Length - 1; ++i)
             {
                 Image.overrideSprite = Sprites[i];
+                Image.SetNativeSize();
                 yield return Wfs;
             }
 
             Image.overrideSprite = Sprites[^1];
+            Image.SetNativeSize();
             yield return Wfs;
 
             Reset();
