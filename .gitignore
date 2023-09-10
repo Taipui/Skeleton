@@ -58,6 +58,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+/Build_BurstDebugInformation_DoNotShip/
 
 # Crashlytics generated file
 crashlytics-build.properties
