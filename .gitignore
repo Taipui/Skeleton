@@ -65,3 +65,6 @@ crashlytics-build.properties
 
 # ScreenShots
 [Aa]ssets/ScreenShots/*
+
+# Unity Recorder generated
+Recordings/
