@@ -96,6 +96,21 @@ namespace TW.Common
         /// <param name="min">最小値(指定がない場合は0).</param>
         /// <returns>0～1.</returns>
         public static float To01(int value, int max, int min = 0) => Mathf.InverseLerp(min, max, value);
+        
+        /// <summary>
+        /// 値の範囲を別の範囲にマッピングする.
+        /// </summary>
+        /// <param name="value">変換する値.</param>
+        /// <param name="minOld">古い最小値.</param>
+        /// <param name="maxOld">古い最大値.</param>
+        /// <param name="minNew">新しい最小値.</param>
+        /// <param name="maxNew">新しい最大値.</param>
+        /// <returns>再マッピング後の値.</returns>
+        public static float Remap(float value, float minOld, float maxOld, float minNew, float maxNew)
+        {
+            var t = Mathf.InverseLerp(minOld, maxOld, value);
+            return Mathf.Lerp(minNew, maxNew, t);
+        }
 
         /// <summary>
         /// AnimationCurve による値を取得する.
