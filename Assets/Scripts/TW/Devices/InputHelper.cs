@@ -110,7 +110,7 @@ namespace TW.Devices
         /// <returns>ワールド座標.</returns>
         public static Vector2 ScreenToWorldPosition(Vector3 screenPosition)
         {
-            screenPosition.z = 10.0f;
+            screenPosition.z = 1.0f;
             var worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
             return worldPosition;
         }
