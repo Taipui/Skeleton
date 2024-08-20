@@ -1,7 +1,9 @@
-﻿using UnityEngine;
-//using UnityEngine.InputSystem;
+using UnityEngine;
+#if false
+using UnityEngine.InputSystem;
 
 using System.Linq;
+#endif
 
 
 namespace TW.Devices
@@ -167,26 +169,6 @@ namespace TW.Devices
         public static bool GetRightMouseButtonUp()
         {
             return Input.GetMouseButtonUp(1);
-        }
-
-        /// <summary>
-        /// マウスがRectTransform内にあるか.
-        /// </summary>
-        /// <param name="rect">RectTransform.</param>
-        /// <returns>RectTransform内ならtrue.</returns>
-        public static bool IsInSide(RectTransform rect)
-        {
-            var mouseScreenPosition = Input.mousePosition;
-            var targetPosition      = rect.anchoredPosition;
-            var targetHalfWidth     = rect.sizeDelta.x / 2.0f;
-            var targetHalfHeight    = rect.sizeDelta.y / 2.0f;
-
-            if (mouseScreenPosition.x < targetPosition.x - targetHalfWidth  + HalfScreenWidth)  { return false; }
-            if (mouseScreenPosition.x > targetPosition.x + targetHalfWidth  + HalfScreenWidth)  { return false; }
-            if (mouseScreenPosition.y < targetPosition.y - targetHalfHeight + HalfScreenHeight) { return false; }
-            if (mouseScreenPosition.y > targetPosition.y + targetHalfHeight + HalfScreenHeight) { return false; }
-
-            return true;
         }
 
         /// <summary>
