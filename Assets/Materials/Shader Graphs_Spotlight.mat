@@ -32,10 +32,10 @@ Material:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
     - _ColorMask: 15
-    - _EdgeSoftness: 0.039
-    - _FillAmount: 0.242
-    - _GaugeRotation: 269
-    - _GaugeScale: 0.479
+    - _EdgeSoftness: 0.017
+    - _FillAmount: 0.187
+    - _GaugeRotation: 90
+    - _GaugeScale: 0.282
     - _PositionOffsetX: 0
     - _PositionOffsetY: 0
     - _Radius: 0.75
@@ -49,7 +49,7 @@ Material:
     m_Colors:
     - _BackgroundColor: {r: 0, g: 0, b: 0, a: 0.69803923}
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
-    - _GaugeColor: {r: 0, g: 0, b: 0, a: 0}
+    - _GaugeColor: {r: 0, g: 0, b: 0, a: 0.09019608}
     - _PositionOffset: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
