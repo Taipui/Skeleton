@@ -21,32 +21,75 @@ namespace TW.Devices
         //================================================================================
 
         /// 画面の横幅.
-        public static float ScreenWidth
-        {
-            get { return Screen.width; }
-        }
+        public static float ScreenWidth => Screen.width;
 
         /// 画面の縦幅.
-        public static float ScreenHeight
-        {
-            get { return Screen.height; }
-        }
+        public static float ScreenHeight => Screen.height;
 
         /// 画面の半分の横幅.
-        public static float HalfScreenWidth
-        {
-            get { return ScreenWidth / 2.0f; }
-        }
+        public static float HalfScreenWidth => ScreenWidth / 2.0f;
 
         /// 画面の半分の縦幅.
-        public static float HalfScreenHeight
-        {
-            get { return ScreenHeight / 2.0f; }
-        }
+        public static float HalfScreenHeight => ScreenHeight / 2.0f;
 
         //================================================================================
         // Methods.
         //================================================================================
+
+
+        /// <summary>
+        /// タップしたか.
+        /// </summary>
+        /// <returns>タップした瞬間true.</returns>
+        public static bool GetTapDown()
+        {
+#if UNITY_EDITOR || UNITY_STANDALONE
+            return Input.GetMouseButtonDown(0);
+#else
+            if (Input.touchCount <= 0) 
+            {
+                return false; 
+            }
+
+            return Input.touches[0].phase == TouchPhase.Began;
+#endif
+        }
+
+        /// <summary>
+        /// タップしているか.
+        /// </summary>
+        /// <returns>タップ中true.</returns>
+        public static bool GetTap()
+        {
+#if UNITY_EDITOR || UNITY_STANDALONE
+            return Input.GetMouseButton(0);
+#else
+            if (Input.touchCount <= 0) 
+            {
+                return false; 
+            }
+
+            return Input.touches[0].phase is TouchPhase.Stationary or TouchPhase.Moved;
+#endif
+        }
+
+        /// <summary>
+        /// タップをやめたか.
+        /// </summary>
+        /// <returns>タップをやめたあるいは認識できなくなった瞬間true.</returns>
+        public static bool GetTapUp()
+        {
+#if UNITY_EDITOR || UNITY_STANDALONE
+            return Input.GetMouseButtonUp(0);
+#else
+            if (Input.touchCount <= 0) 
+            {
+                return false; 
+            }
+
+            return Input.touches[0].phase is TouchPhase.Ended or TouchPhase.Canceled;
+#endif
+        }
 
         /// <summary>
         /// タップしたスクリーン座標を返す.
@@ -57,21 +100,21 @@ namespace TW.Devices
         /// <returns>スクリーン座標.</returns>
         public static Vector3? GetTapScreenPosition()
         {
-#if UNITY_EDITOR || UNITY_STANDALONE
-            if (Input.GetMouseButtonDown(0))
+            if (GetTapDown())
             {
+#if UNITY_EDITOR || UNITY_STANDALONE
                 return Input.mousePosition;
-            }
 #else
             if (Input.touchCount <= 0) 
             {
-                return default; 
+                return null; 
             }
 
             return Input.touches[0].position;
 #endif
+            }
 
-            return default;
+            return null;
         }
 
         /// <summary>
@@ -86,11 +129,11 @@ namespace TW.Devices
             var screenPosition = GetTapScreenPosition();
             if (!screenPosition.HasValue)
             {
-                return default;
+                return null;
             }
 
-            var screenPos = screenPosition.Value;
-            screenPos.z   = 10.0f;
+            var screenPos     = screenPosition.Value;
+            screenPos.z       = 10.0f;
             var worldPosition = Camera.main.ScreenToWorldPoint(screenPos);
             return worldPosition;
         }
@@ -100,10 +143,7 @@ namespace TW.Devices
         /// </summary>
         /// <param name="screenPosition">スクリーン座標.</param>
         /// <returns>ワールド座標.</returns>
-        public static Vector2 ScreenToWorldPosition(Vector2 screenPosition)
-        {
-            return ScreenToWorldPosition(new Vector3(screenPosition.x, screenPosition.y, 0.0f));
-        }
+        public static Vector2 ScreenToWorldPosition(Vector2 screenPosition) => ScreenToWorldPosition(new Vector3(screenPosition.x, screenPosition.y));
 
         /// <summary>
         /// スクリーン座標をワールド座標に変換する.
@@ -112,64 +152,28 @@ namespace TW.Devices
         /// <returns>ワールド座標.</returns>
         public static Vector2 ScreenToWorldPosition(Vector3 screenPosition)
         {
-            screenPosition.z = 1.0f;
+            screenPosition.z  = 1.0f;
             var worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
             return worldPosition;
-        }
-
-        /// <summary>
-        /// タップしたか.
-        /// </summary>
-        /// <returns>タップした瞬間true.</returns>
-        public static bool GetTapDown()
-        {
-            return Input.GetMouseButtonDown(0);
-        }
-
-        /// <summary>
-        /// タップしているか.
-        /// </summary>
-        /// <returns>タップ中true.</returns>
-        public static bool GetTap()
-        {
-            return Input.GetMouseButton(0);
-        }
-
-        /// <summary>
-        /// タップをやめたか.
-        /// </summary>
-        /// <returns>タップをやめたあるいは認識できなくなった瞬間true.</returns>
-        public static bool GetTapUp()
-        {
-            return Input.GetMouseButtonUp(0);
         }
 
         /// <summary>
         /// 右クリックしたか.
         /// </summary>
         /// <returns>右クリックした瞬間true.</returns>
-        public static bool GetRightMouseButtonDown()
-        {
-            return Input.GetMouseButtonDown(1);
-        }
+        public static bool GetRightMouseButtonDown() => Input.GetMouseButtonDown(1);
 
         /// <summary>
         /// 右クリックしているか.
         /// </summary>
         /// <returns>右クリック中true.</returns>
-        public static bool GetRightMouseButton()
-        {
-            return Input.GetMouseButton(1);
-        }
+        public static bool GetRightMouseButton() => Input.GetMouseButton(1);
 
         /// <summary>
         /// 右クリックをやめたか.
         /// </summary>
         /// <returns>右クリックをやめたあるいは認識できなくなった瞬間true.</returns>
-        public static bool GetRightMouseButtonUp()
-        {
-            return Input.GetMouseButtonUp(1);
-        }
+        public static bool GetRightMouseButtonUp() => Input.GetMouseButtonUp(1);
 
         /// <summary>
         /// タップした場所にあるオブジェクトを取得する.
@@ -180,13 +184,44 @@ namespace TW.Devices
         /// </returns>
         public static GameObject GetTappedObject()
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var position = GetTapScreenPosition();
+            if (!position.HasValue)
+            {
+                return null;
+            }
+
+            var ray = Camera.main.ScreenPointToRay(position.Value);
             if (Physics.Raycast(ray.origin, ray.direction, out var hit, Mathf.Infinity))
             {
                 return hit.collider.gameObject;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// タップした場所にあるオブジェクトを取得する.
+        /// </summary>
+        /// <remarks>2D版.</remarks>
+        /// <returns>
+        /// タップした場所にオブジェクトがあれば、そのオブジェクトを返す.
+        /// なければnullを返す.
+        /// </returns>
+        public static GameObject GetTappedObject2D()
+        {
+            var position = GetTapScreenPosition();
+            if (!position.HasValue)
+            {
+                return null;
+            }
+
+            var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(position.Value), Vector3.forward);
+            if (hit.collider == null)
+            {
+                return null;
+            }
+
+            return hit.collider.gameObject;
         }
 
 #if false
