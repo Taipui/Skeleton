@@ -1,9 +1,8 @@
 using UnityEngine;
 #if false
 using UnityEngine.InputSystem;
-
-using System.Linq;
 #endif
+using System.Linq;
 
 
 namespace TW.Devices
@@ -36,6 +35,24 @@ namespace TW.Devices
         // Methods.
         //================================================================================
 
+        /// <summary>
+        /// スクリーン座標をワールド座標に変換する.
+        /// </summary>
+        /// <param name="screenPosition">スクリーン座標.</param>
+        /// <returns>ワールド座標.</returns>
+        public static Vector2 ScreenToWorldPosition(Vector2 screenPosition) => ScreenToWorldPosition(new Vector3(screenPosition.x, screenPosition.y));
+
+        /// <summary>
+        /// スクリーン座標をワールド座標に変換する.
+        /// </summary>
+        /// <param name="screenPosition">スクリーン座標.</param>
+        /// <returns>ワールド座標.</returns>
+        public static Vector2 ScreenToWorldPosition(Vector3 screenPosition)
+        {
+            screenPosition.z  = 1.0f;
+            var worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
+            return worldPosition;
+        }
 
         /// <summary>
         /// タップしたか.
@@ -43,16 +60,12 @@ namespace TW.Devices
         /// <returns>タップした瞬間true.</returns>
         public static bool GetTapDown()
         {
-#if UNITY_EDITOR || UNITY_STANDALONE
-            return Input.GetMouseButtonDown(0);
-#else
-            if (Input.touchCount <= 0) 
+            if (Input.touchCount > 0)
             {
-                return false; 
+                return Input.touches[0].phase == TouchPhase.Began;
             }
 
-            return Input.touches[0].phase == TouchPhase.Began;
-#endif
+            return Input.GetMouseButtonDown(0);
         }
 
         /// <summary>
@@ -61,16 +74,12 @@ namespace TW.Devices
         /// <returns>タップ中true.</returns>
         public static bool GetTap()
         {
-#if UNITY_EDITOR || UNITY_STANDALONE
-            return Input.GetMouseButton(0);
-#else
-            if (Input.touchCount <= 0) 
+            if (Input.touchCount > 0)
             {
-                return false; 
+                return Input.touches[0].phase is TouchPhase.Stationary or TouchPhase.Moved;
             }
 
-            return Input.touches[0].phase is TouchPhase.Stationary or TouchPhase.Moved;
-#endif
+            return Input.GetMouseButton(0);
         }
 
         /// <summary>
@@ -79,16 +88,26 @@ namespace TW.Devices
         /// <returns>タップをやめたあるいは認識できなくなった瞬間true.</returns>
         public static bool GetTapUp()
         {
-#if UNITY_EDITOR || UNITY_STANDALONE
-            return Input.GetMouseButtonUp(0);
-#else
-            if (Input.touchCount <= 0) 
+            if (Input.touchCount > 0)
             {
-                return false; 
+                return Input.touches[0].phase is TouchPhase.Ended or TouchPhase.Canceled;
             }
 
-            return Input.touches[0].phase is TouchPhase.Ended or TouchPhase.Canceled;
-#endif
+            return Input.GetMouseButtonUp(0);
+        }
+
+        /// <summary>
+        /// タップしているスクリーン座標を返す.
+        /// </summary>
+        /// <returns>スクリーン座標.</returns>
+        public static Vector3? GetTappingScreenPosition()
+        {
+            if (Input.touchCount > 0)
+            {
+                return Input.touches[0].position;
+            }
+
+            return Input.mousePosition;
         }
 
         /// <summary>
@@ -98,24 +117,7 @@ namespace TW.Devices
         /// 複数同時タップされた場合は、一番最初にタップした場所.
         /// </remarks>
         /// <returns>スクリーン座標.</returns>
-        public static Vector3? GetTapScreenPosition()
-        {
-            if (GetTapDown())
-            {
-#if UNITY_EDITOR || UNITY_STANDALONE
-                return Input.mousePosition;
-#else
-            if (Input.touchCount <= 0) 
-            {
-                return null; 
-            }
-
-            return Input.touches[0].position;
-#endif
-            }
-
-            return null;
-        }
+        public static Vector3? GetTapScreenPosition() => GetTapDown() ? GetTappingScreenPosition() : null;
 
         /// <summary>
         /// タップしたワールド座標を返す.
@@ -135,25 +137,6 @@ namespace TW.Devices
             var screenPos     = screenPosition.Value;
             screenPos.z       = 10.0f;
             var worldPosition = Camera.main.ScreenToWorldPoint(screenPos);
-            return worldPosition;
-        }
-
-        /// <summary>
-        /// スクリーン座標をワールド座標に変換する.
-        /// </summary>
-        /// <param name="screenPosition">スクリーン座標.</param>
-        /// <returns>ワールド座標.</returns>
-        public static Vector2 ScreenToWorldPosition(Vector2 screenPosition) => ScreenToWorldPosition(new Vector3(screenPosition.x, screenPosition.y));
-
-        /// <summary>
-        /// スクリーン座標をワールド座標に変換する.
-        /// </summary>
-        /// <param name="screenPosition">スクリーン座標.</param>
-        /// <returns>ワールド座標.</returns>
-        public static Vector2 ScreenToWorldPosition(Vector3 screenPosition)
-        {
-            screenPosition.z  = 1.0f;
-            var worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
             return worldPosition;
         }
 
@@ -200,14 +183,52 @@ namespace TW.Devices
         }
 
         /// <summary>
+        /// オブジェクトを取得する.
+        /// </summary>
+        /// <param name="position">スクリーン座標.</param>
+        /// <param name="layer">レイヤー.</param>
+        /// <returns>オブジェクト.</returns>
+        public static GameObject GetObject2D(Vector3 position, LayerMask layer = default)
+        {
+            var hit = Physics2D.Raycast(
+                Camera.main.ScreenToWorldPoint(position)
+              , Vector3.forward
+              , float.MaxValue
+              , layer
+            );
+            return (hit.collider == null) ? null : hit.collider.gameObject;
+        }
+
+        /// <summary>
+        /// タップしている場所にあるオブジェクトを取得する.
+        /// </summary>
+        /// <remarks>2D版.</remarks>
+        /// <param name="layer">レイヤー.</param>
+        /// <returns>
+        /// タップしている場所にオブジェクトがあれば、そのオブジェクトを返す.
+        /// なければnullを返す.
+        /// </returns>
+        public static GameObject GetTappingObject2D(LayerMask layer = default)
+        {
+            var position = GetTappingScreenPosition();
+            if (!position.HasValue)
+            {
+                return null;
+            }
+
+            return GetObject2D(position.Value, layer);
+        }
+
+        /// <summary>
         /// タップした場所にあるオブジェクトを取得する.
         /// </summary>
         /// <remarks>2D版.</remarks>
+        /// <param name="layer">レイヤー.</param>
         /// <returns>
         /// タップした場所にオブジェクトがあれば、そのオブジェクトを返す.
         /// なければnullを返す.
         /// </returns>
-        public static GameObject GetTappedObject2D()
+        public static GameObject GetTappedObject2D(LayerMask layer = default)
         {
             var position = GetTapScreenPosition();
             if (!position.HasValue)
@@ -215,13 +236,33 @@ namespace TW.Devices
                 return null;
             }
 
-            var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(position.Value), Vector3.forward);
-            if (hit.collider == null)
+            return GetObject2D(position.Value, layer);
+        }
+
+        /// <summary>
+        /// タップした場所にあるオブジェクトを取得する.
+        /// </summary>
+        /// <remarks>2D版.</remarks>
+        /// <param name="layer">レイヤー.</param>
+        /// <returns>
+        /// タップした場所にオブジェクトがあれば、そのオブジェクトを返す.
+        /// オブジェクトが複数ある場合、もっとも近いオブジェクトを返す.
+        /// なければnullを返す.
+        /// </returns>
+        public static GameObject GetTappedNearestObject2D(LayerMask layer = default)
+        {
+            var position = GetTapScreenPosition();
+            if (!position.HasValue)
             {
                 return null;
             }
 
-            return hit.collider.gameObject;
+            var hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(position.Value), Vector3.forward, float.MaxValue, layer);
+            return hits
+                .Where(hit => hit.collider != null)
+                .OrderBy(hit => Vector3.Distance(hit.transform.position, position.Value))
+                .Select(hit => hit.collider.gameObject)
+                .FirstOrDefault();
         }
 
 #if false

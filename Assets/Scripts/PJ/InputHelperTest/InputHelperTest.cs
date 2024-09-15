@@ -34,6 +34,7 @@ namespace PJ.InputHelperTest
         [SerializeField] private TextMeshProUGUI TapScreenPositionLabel    = default;
         [SerializeField] private TextMeshProUGUI TapWorldPositionLabel     = default;
         [SerializeField] private TextMeshProUGUI TappedObjectLabel         = default;
+        [SerializeField] private TextMeshProUGUI TappedObject2DLabel       = default;
 
         //================================================================================
         // Methods.
@@ -68,7 +69,8 @@ namespace PJ.InputHelperTest
             {
                 TapWorldPositionLabel.SetText($"TapWorldPosition: {tapWorldPosition.Value}");
             }
-            TappedObjectLabel.SetText($"TappedObject: {InputHelper.GetTappedObject()}");
+            TappedObjectLabel  .SetText($"TappedObject: {InputHelper.GetTappedObject()}");
+            TappedObject2DLabel.SetText($"TappedObject2D: {InputHelper.GetTappedObject2D()}");
         }
     }
 }
