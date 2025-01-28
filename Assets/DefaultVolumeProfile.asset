@@ -238,6 +238,25 @@ MonoBehaviour:
   bladeRotation:
     m_OverrideState: 1
     m_Value: 0
+--- !u!114 &-2514569879320399170
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 123715d1145f2fb4d920f29df2e2f0ef, type: 3}
+  m_Name: Fade
+  m_EditorClassIdentifier: 
+  active: 1
+  Ratio:
+    m_OverrideState: 1
+    m_Value: 0
+  Color:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &-628945746362759752
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -337,6 +356,7 @@ MonoBehaviour:
   - {fileID: -628945746362759752}
   - {fileID: 8471366713837810195}
   - {fileID: -6333500021967452585}
+  - {fileID: -2514569879320399170}
 --- !u!114 &2838128469726401363
 MonoBehaviour:
   m_ObjectHideFlags: 3

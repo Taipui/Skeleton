@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Unlit_Dissolve_Unlit
   m_Shader: {fileID: 4800000, guid: 0455f0b8ac740124f92ffad66406ad75, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -26,12 +29,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Dissolve: 0.5
-    - _EdgeColorIntensity: 0
-    - _EdgeWidth: 0.05
+    - _Dissolve: 0.395
+    - _EdgeColorIntensity: 4.98
+    - _EdgeWidth: 0.06
     - _NoiseScale: 50
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EdgeColor: {r: 0, g: 3.890196, b: 4, a: 0}
+    - _EdgeColor: {r: 0, g: 3.890196, b: 4, a: 1}
     - _NoiseUVSpeed: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
